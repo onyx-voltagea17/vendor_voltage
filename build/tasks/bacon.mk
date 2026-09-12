@@ -39,6 +39,16 @@ bacon: $(DEFAULT_GOAL) $(INTERNAL_OTA_PACKAGE_TARGET)
 		echo -e "${CL_BLD}${CL_GRN}▶ SHA256      :${CL_CYN} `cut -d' ' -f1 $(VOLTAGE_TARGET_PACKAGE).sha256sum`${CL_RST}"; \
 		echo -e "${CL_BLD}${CL_GRN}▶ File Size   :${CL_CYN} `du -sh $(VOLTAGE_TARGET_PACKAGE) | awk '{print $$1}'`${CL_RST}"; \
 		echo -e "${CL_BLD}${CL_GRN}▶ Build Date  :${CL_CYN} `grep ro.voltage.build.date $(PRODUCT_OUT)/system/build.prop | cut -d'=' -f2-`${CL_RST}"; \
+		echo -e "\n${CL_BLD}${CL_YLW}Creating JSON OTA...${CL_RST}\n"; \
+		if [ -x ./vendor/voltage/build/tools/createjson.sh ]; then \
+			./vendor/voltage/build/tools/createjson.sh \
+				$(TARGET_DEVICE) \
+				$(PRODUCT_OUT) \
+				voltage-$(VOLTAGE_VERSION).zip; \
+		else \
+			echo -e "${CL_BLD}${CL_RED}ERROR: createjson.sh not found or not executable!${CL_RST}"; \
+			exit 1; \
+		fi; \
 		echo -e "\n${CL_BLD}${CL_GRN}[===============================================================]${CL_RST}\n"; \
 	}
 
